@@ -20,7 +20,7 @@ Add this to your module's `build.gradle` file (make sure the version matches the
 ```gradle
 dependencies {
 	...
-	implementation 'com.github.GrenderG:Toasty:1.4.2'
+	implementation 'com.github.mrhussnain:YTExtract:v2.0'
 }
 ```
 
