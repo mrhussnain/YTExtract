@@ -11,7 +11,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class YTExtract {
+public class YTExtract implements APISettings {
 
     String key;
     public YTExtract(String apikey) {
