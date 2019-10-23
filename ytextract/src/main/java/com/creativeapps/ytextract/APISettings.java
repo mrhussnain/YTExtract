@@ -1,5 +1,5 @@
 package com.creativeapps.ytextract;
 
 public interface APISettings {
-    public static String endPoint = "https://rapidapi.com/mrhussnain3/api/ytextract";
+    public static String endPoint = "https://ytextract.p.rapidapi.com";
 }
