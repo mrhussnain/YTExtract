@@ -1,5 +1,7 @@
 # YTExtract
 
+Signup https://rapidapi.com/mrhussnain3/api/ytextract to get API_KEY in order to use this api.
+
 ## Prerequisites
 
 Add this in your root `build.gradle` file (**not** your module `build.gradle` file):
