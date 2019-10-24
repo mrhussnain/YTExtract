@@ -27,7 +27,7 @@ dependencies {
 
 ## Sample Code
 
-_Check Sample app project for complete implementation of this api. [API DEMO](https://raw.github.com/mrhussnain/YTExtract/sample.apk)_
+_Check Sample app project for complete implementation of this api. [API DEMO](https://github.com/mrhussnain/YTExtract/raw/master/sample.apk)_
 
 Add permission to your `AndroidManifest.xml` file:
 
