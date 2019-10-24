@@ -28,7 +28,7 @@ dependencies {
 
 Place this code in any activity or java class.
 
-```
+``` java
  String ytUrl = "demo-yt-url";
  new AsyncTask<String, Void, Void>() {
 
