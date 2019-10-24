@@ -1,37 +1,62 @@
 package com.creativeapps.ytextract;
 
+import android.os.AsyncTask;
+
 import com.creativeapps.ytextract.models.MP3;
 import com.creativeapps.ytextract.models.Video;
 import com.creativeapps.ytextract.models.YTModel;
 import com.creativeapps.ytextract.utils.HttpHandler;
 import com.creativeapps.ytextract.utils.Utils;
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
 
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class YTExtract implements APISettings {
+public abstract class YTExtract extends AsyncTask<String,Void,Void> implements APISettings {
 
     String key;
     public YTExtract(String apikey) {
         key = apikey;
     }
+    YTModel model;
 
-    public YTModel Extract(String YouTubeUrl) {
-        String videoID = Utils.getVideoID(YouTubeUrl);
+    public abstract void onExtractionComplete(YTModel model);
+
+    public void extract(String YouTubeUrl) {
+        this.execute(YouTubeUrl);
+    }
+
+    @Override
+    protected void onPostExecute(Void aVoid) {
+        onExtractionComplete(model);
+        super.onPostExecute(aVoid);
+    }
+
+    @Override
+    protected Void doInBackground(String... strings) {
+        String videoID = Utils.getVideoID(strings[0]);
         ArrayList<MP3> mp3 = new ArrayList<>();
         ArrayList<Video> video = new ArrayList<>();
 
-        String[] heads = new String[] { "x-rapidapi-host:ytextract.p.rapidapi.com",
-                "x-rapidapi-key:"+key };
-
-        HttpHandler handler = new HttpHandler(heads);
-        String mp3json = handler.makeServiceCall(endPoint+"/@api/json/mp3/"+videoID);
-        String videojson = handler.makeServiceCall(endPoint+"/@api/json/mergedstreams/"+videoID);
-
-        String title,imageurl,duration;
         try {
+            HttpResponse<String> response = Unirest.get("https://ytextract.p.rapidapi.com/@api/json/mp3/"+videoID)
+                    .header("x-rapidapi-host", "ytextract.p.rapidapi.com")
+                    .header("x-rapidapi-key", key)
+                    .asString();
+            String mp3json = response.getBody();
+
+            response = Unirest.get("https://ytextract.p.rapidapi.com/@api/json/mergedstreams/"+videoID)
+                    .header("x-rapidapi-host", "ytextract.p.rapidapi.com")
+                    .header("x-rapidapi-key", key)
+                    .asString();
+
+            String videojson = response.getBody();
+
+            String title,imageurl,duration;
             JSONObject mp3obj = new JSONObject(mp3json);
             JSONObject videoobj = new JSONObject(videojson);
 
@@ -69,12 +94,13 @@ public class YTExtract implements APISettings {
                 }
             }
 
-            return new YTModel(title,videoID,imageurl,duration,mp3,video);
-
-        }catch (Exception ex) {
-            ex.printStackTrace();
+            model = new YTModel(title,videoID,imageurl,duration,mp3,video);
+        } catch (UnirestException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
         return null;
     }
+
 }
